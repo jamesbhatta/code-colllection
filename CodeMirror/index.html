@@ -18,7 +18,8 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
-    <style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/addon/scroll/simplescrollbars.min.css" integrity="sha512-2y3NTsei81d5emn5nwrdflyI5EGULwKXRZ0BCbO55cjgQ8x62X4ydH/jbnzrKnxArstf79F9n6z1j2MtVmJ8YA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style>
       .CodeMirror {
         /* font-family: Arial, monospace; */
         font-size: 16px;
@@ -29,6 +30,10 @@
       .CodeMirror-scroll {
         min-height: 100px;
       }
+      .CodeMirror-lines {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
     </style>
   </head>
   <body>
@@ -96,6 +101,7 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/addon/scroll/simplescrollbars.min.js" integrity="sha512-HbaqNZHZLix+FaENPr62o07Q2G46VYUDCLZyxo5fPE0lN1EIpncArGlznYfLu+q0Vy7eTR+EBcW23FypU+Jqpw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
       // var coderMirrorElements = document.getElementsByClassName('html-editor');
@@ -111,6 +117,7 @@
           lineNumbers: true,
           autoCloseTags: true,
           autoCloseBrackets: true,
+          scrollbarStyle: "overlay"
         }).setSize("100%", "100%");
       }
     </script>
