@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Code mirror</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/codemirror.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/codemirror.min.css"
+    />
+    <!-- Material theme Codemirror -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/theme/material-palenight.min.css"
+      integrity="sha512-uIAyXysSwPKYTS4BrBQGkt7i9ozdNjNA4jXfjFDl6fWIc2zDllleoiY5EkH7Ib2j+Qb8YJx4a5qy192JZqxqVg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+      .CodeMirror {
+        /* font-family: Arial, monospace; */
+        font-size: 16px;
+        line-height: 1.5;
+        border-radius: 0.5rem;
+      }
+
+      .CodeMirror-scroll {
+        min-height: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <div style="margin-bottom: 15px">
+        <textarea name="" class="html-editor" cols="30" rows="10">
+            <h4 class="footer-title"> quick links </h4>
+            <div class="clearfix">
+                <ul class="list-type1">
+                    <li><a href="{{route('distribution')}}">Distribution</a></li>
+                    <li><a href="/products">Products</a></li>
+                    <li><a href="/publication">Published articles</a></li>
+                    <li><a href="/new-and-events">News and events</a></li>
+                </ul>
+            </div>
+        </textarea>
+    </div>
+    <div style="margin-bottom: 15px">
+      <textarea id="one" class="html-editor" cols="30" rows="10"></textarea>
+    </div>
+    <div style="margin-bottom: 15px">
+      <textarea id="two" class="html-editor" cols="30" rows="10"></textarea>
+    </div>
+    <div style="margin-bottom: 15px">
+      <textarea id="three" class="html-editor" cols="30" rows="10"></textarea>
+    </div>
+    <div style="margin-bottom: 15px">
+      <textarea id="four" class="html-editor" cols="30" rows="10"></textarea>
+    </div>
+    <textarea id="four" class="html-editor" cols="30" rows="10"></textarea>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/mode/xml/xml.min.js"
+      integrity="sha512-UWfBe6aiZInvbBlm91IURVHHTwigTPtM3M4B73a8AykmxhDWq4EC/V2rgUNiLgmd/i0y0KWHolqmVQyJ35JsNA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/mode/css/css.min.js"
+      integrity="sha512-UB/NeigW3LreuA/sHVVcykCf2FzhzHlk0BpsanfK8VmvvLFLUof1ysy1hCOYhyqlfCY8HW7w8qh/rsUJZLMpIg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/mode/htmlmixed/htmlmixed.min.js"
+      integrity="sha512-IC+qg9ITjo2CLFOTQcO6fBbvisTeJmiT5D5FnXsCptqY8t7/UxWhOorn2X+GHkoD1FNkyfnMJujt5PcB7qutyA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/mode/javascript/javascript.min.js"
+      integrity="sha512-DJ/Flq7rxJDDhgkO49H/rmidX44jmxWot/ku3c+XXEF9XFal78KIpu7w6jEaQhK4jli1U3/yOH+Rp3cIIEYFPQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/addon/hint/html-hint.min.js"
+      integrity="sha512-oxBKDzXElkyh3mQC/bKA/se1Stg1Q6fm7jz7PPY2kL01jRHQ64IwjpZVsuZojcaj5g8eKSMY9UJamtB1QR7Dmw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    {{-- Codemirror: extensions --}}
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/addon/edit/closetag.min.js"
+      integrity="sha512-ZUq/bxUHwC35d3oP1hC5lshiHFCnI3dDtDPtSp9+CQDy/YU0LQu2ujDd603LuWho0G4XH8MSvyLV47x2Zcd8Jw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+
+    <script>
+      // var coderMirrorElements = document.getElementsByClassName('html-editor');
+      var coderMirrorElements = document.querySelectorAll(
+        "textarea.html-editor"
+      );
+      console.log(coderMirrorElements);
+      for (let editor of coderMirrorElements) {
+        CodeMirror.fromTextArea(editor, {
+          value: editor.value,
+          mode: "htmlmixed",
+          theme: "material-palenight",
+          lineNumbers: true,
+          autoCloseTags: true,
+          autoCloseBrackets: true,
+        }).setSize("100%", "100%");
+      }
+    </script>
+  </body>
+</html>
