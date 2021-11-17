@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Web Notification</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<div class="row">
+		<div class="col-md-3"></div>
+		<div class="col-md-6 pt-5">
+			<div id="successAlert" class="alert alert-success alert-dismissible">
+				<button type="button" class="close" data-dismiss="alert">×</button>
+				<strong>Success!</strong> The Notification has been sent to the user.
+			</div>
+			<div id="failureAlert" class="alert alert-danger alert-dismissible">
+				<button type="button" class="close" data-dismiss="alert">×</button>
+				<strong>Sorry!</strong> The Notification cannot be sent to the user.
+			</div>
+			<div class="card border-success">
+				<div class="card-header bg-success text-white">
+					<h4 class="h4-responsive">Windows Notification API</h4>
+				</div>
+				<div class="card-body">
+					<form id="notificationForm" action="" class="form">
+						<div class="form-group">
+							<label>Title</label>
+							<input type="text" name="title" class="form-control">
+						</div>
+						<div class="form-group">
+							<label>Notification Message</label>
+							<textarea name="body" class="form-control" id="" cols="30" rows="10"></textarea>
+						</div>
+						<div class="form-group">
+							<button id="notifyBtn" type="submit" class="btn btn-success btn-lg">Notify</button>
+						</div>
+					</form>
+				</div>
+			</div>
+			<!-- End of card -->
+		</div>
+		<div class="col-md-3"></div>
+	</div>
+	<script>
+		function nop(){return false;}
+		$(function() {
+			var successAlert = $('#successAlert');
+			var failureAlert = $('#failureAlert');
+			var form = $('#notificationForm');
+			var title = $('#notificationForm input[name=title]');
+			var body = $('#notificationForm textarea[name=body]');
+			var notifyBtn = $('#notifyBtn');
+			successAlert.hide()
+			failureAlert.hide();
+			notifyBtn.hide();
+
+			function validateForm()
+			{
+				if( title.val() )
+				{
+					notifyBtn.show();
+				} else {
+					notifyBtn.hide();
+				}
+			}
+
+			function clearForm()
+			{
+				notificationForm.reset();
+				validateForm();
+			}
+
+			function sendNotification(title, body)
+			{
+				if ('Notification' in window) {
+					let ask = Notification.requestPermission();
+					ask.then( permission => {
+						if ( permission === "granted" ) {
+							let msg = new Notification( title, {
+								body: body,
+								icon: 'https://www.gravatar.com/avatar/2acfb745ecf9d4dccb3364752d17f65f.jpg',
+								vibrate: [200, 100, 200],
+							});
+							msg.addEventListener( "click", event => {
+								alert( "Click received" );
+							})
+						}
+					});
+					return true;
+				} else {
+					return false;
+				}
+			}
+
+			title.change(function() {
+				validateForm();
+			});
+			body.change(function() {
+				validateForm();
+			});
+
+
+			$('#notificationForm').submit(function(event) {
+				console.log("submit");
+				event.preventDefault();
+				if ( sendNotification( title.val(), body.val() )) {
+					successAlert.show();
+					console.log("send");
+					clearForm();
+				} else {
+					failureAlert.show();
+					console.log("failed");
+				}
+			});
+
+
+		});
+	</script>
+</body>
+</html>
