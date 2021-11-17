@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Learning Leaflet JS</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+      integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+      crossorigin=""
+    />
+    <script
+      src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+      integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.0/topojson.min.js"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      #main {
+        max-width: 900px;
+        margin: 50px auto;
+      }
+      #map {
+        height: 600px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="map"></div>
+
+    <script>
+      //changing topojson to geojson
+      L.TopoJSON = L.GeoJSON.extend({
+        addData: function (jsonData) {
+          if (jsonData.type === "Topology") {
+            for (let key in jsonData.objects) {
+              if (jsonData.objects.hasOwnProperty(key)) {
+                let geojson = topojson.feature(jsonData, jsonData.objects[key]);
+                L.GeoJSON.prototype.addData.call(this, geojson);
+              }
+            }
+          } else {
+            L.GeoJSON.prototype.addData.call(this, jsonData);
+          }
+        },
+      });
+
+      // Initialize map
+      let map = L.map("map", { minZoom: 7 }).setView(
+          [28.1734922968426, 83.98199462890626],
+          7
+        ),
+        topoLayer = new L.TopoJSON();
+
+      //tile layers
+      L.tileLayer("", {
+        attribution:
+          '&copy; <a href="https://www.manojbhatta.com.np">James Bhatta</a> contributors',
+      }).addTo(map);
+
+      let mapIcon = L.icon({
+        iconUrl:
+          "https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678111-map-marker-256.png",
+        iconSize: [30, 30], // size of the icon
+        shadowSize: [50, 64],
+      });
+      //Implementation marker in map
+      // L.marker([27.89734922968426, 84.98199462890626], { icon: mapIcon })
+      //  .addTo(map)
+      // .bindPopup("Hover data on Map")
+      // .on("mouseover", function () {
+      //   this.openPopup();
+      // })
+      // .on("mouseout", function () {
+      //   this.closePopup();
+      // });
+
+      $.getJSON(
+        "https://raw.githubusercontent.com/dikenulak/nepalMapWithTopojson/master/data/nepal-districts.topojson"
+      ).done(createDistrictLayer);
+
+      function createDistrictLayer(topoData) {
+        topoLayer.addData(topoData);
+        topoLayer.addTo(map);
+        topoLayer.eachLayer(districtLayer);
+      }
+
+      var zoneColor = {
+        Dhaualagiri: "#" + Math.floor(Math.random() * 16777215).toString(16),
+        Bagmati: "#" + Math.floor(Math.random() * 16777215).toString(16),
+        Janakpur: "#" + Math.floor(Math.random() * 16777215).toString(16),
+        Narayani: "#" + Math.floor(Math.random() * 16777215).toString(16),
+        Koshi: "#" + Math.floor(Math.random() * 16777215).toString(16),
+        Mechi: "#" + Math.floor(Math.random() * 16777215).toString(16),
+        Sagarmatha: "#" + Math.floor(Math.random() * 16777215).toString(16),
+        Mahakali: "#" + Math.floor(Math.random() * 16777215).toString(16),
+        Seti: "#" + Math.floor(Math.random() * 16777215).toString(16),
+        Bheri: "#" + Math.floor(Math.random() * 16777215).toString(16),
+        Karnali: "#" + Math.floor(Math.random() * 16777215).toString(16),
+        Rapti: "#" + Math.floor(Math.random() * 16777215).toString(16),
+        Gandaki: "#" + Math.floor(Math.random() * 16777215).toString(16),
+        Lumbini: "#" + Math.floor(Math.random() * 16777215).toString(16),
+      };
+
+      //layer for disctrict
+      const districtLayer = (layer) => {
+        layer.setStyle({
+          fillColor: zoneColor[layer.feature.properties.Zone] ?? "red",
+          weight: 1.5,
+          color: "white",
+          opacity: 0.5,
+          fillOpacity: 1,
+        });
+        layer.on({
+          mouseover: enterLayer,
+          mouseout: leaveLayer,
+          click: clickToDistrict,
+        });
+
+        //functionality we can do on map layer
+        function enterLayer() {
+          layer.setStyle({
+            weight: 2,
+            fillColor: "#10a2e4",
+          });
+        }
+        function leaveLayer() {
+          layer.setStyle({
+            weight: 1,
+            fillColor: zoneColor[layer.feature.properties.Zone] ?? "red",
+          });
+        }
+        var popup = L.popup();
+        function clickToDistrict(e) {
+          let content = `<div>Disrict: ${
+            e.target.feature.properties.DISTRICT
+          }</div>
+            <div>Zone: ${e.target.feature.properties.Zone}</div>
+            <div>Region: ${e.target.feature.properties.Region}</div>
+            <div>Population: ${
+              e.target.feature.properties.Population ?? "Not Available"
+            }</div>
+            <div>ID: ${e.target.feature.properties.id ?? "Not Available"}</div>
+            `;
+          popup.setLatLng(e.latlng).setContent(content).openOn(map);
+        }
+      };
+    </script>
+  </body>
+</html>
